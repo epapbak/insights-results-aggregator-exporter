@@ -494,7 +494,7 @@ func main() {
 	}
 
 	// perform selected operation
-	exitStatus, err := doSelectedOperation(&config, cliFlags, log.Logger)
+	exitStatus, err := doSelectedOperation(&config, cliFlags)
 	if err != nil {
 		log.Err(err).Msg("Do selected operation")
 	}
