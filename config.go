@@ -156,8 +156,8 @@ type SentryConfiguration struct {
 	SentryEnvironment string `mapstructure:"environment" toml:"environment"`
 }
 
-// LoadConfiguration loads configuration from defaultConfigFile, file set in
-// configFileEnvVariableName or from env
+// LoadConfiguration function loads configuration from defaultConfigFile, file
+// set in configFileEnvVariableName or from environment variables
 func LoadConfiguration(configFileEnvVariableName, defaultConfigFile string) (ConfigStruct, error) {
 	var config ConfigStruct
 
@@ -182,8 +182,8 @@ func LoadConfiguration(configFileEnvVariableName, defaultConfigFile string) (Con
 	// try to read the whole configuration
 	err := viper.ReadInConfig()
 	if _, isNotFoundError := err.(viper.ConfigFileNotFoundError); !specified && isNotFoundError {
-		// If config file is not present (which might be correct in
-		// some environment) we need to read configuration from
+		// If configuration file is not present (which might be correct
+		// in some environment) we need to read configuration from
 		// environment variables. The problem is that Viper is not
 		// smart enough to understand the structure of config by
 		// itself, so we need to read fake config file
@@ -199,6 +199,8 @@ func LoadConfiguration(configFileEnvVariableName, defaultConfigFile string) (Con
 		viper.SetConfigType("toml")
 
 		err = viper.ReadConfig(strings.NewReader(fakeTomlConfig))
+
+		// check for error during parsing
 		if err != nil {
 			return config, err
 		}
@@ -215,11 +217,13 @@ func LoadConfiguration(configFileEnvVariableName, defaultConfigFile string) (Con
 	viper.SetEnvPrefix(envPrefix)
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "__"))
 
+	// try to unmarshall configuration and check for (any) error
 	err = viper.Unmarshal(&config)
 	if err != nil {
 		return config, err
 	}
 
+	// updated configuration by introducing Clowder-related things
 	if err := updateConfigFromClowder(&config); err != nil {
 		fmt.Println("Error loading clowder configuration")
 		return config, err
@@ -228,12 +232,12 @@ func LoadConfiguration(configFileEnvVariableName, defaultConfigFile string) (Con
 	return config, err
 }
 
-// GetStorageConfiguration returns storage configuration
+// GetStorageConfiguration function returns storage configuration
 func GetStorageConfiguration(config *ConfigStruct) StorageConfiguration {
 	return config.Storage
 }
 
-// GetLoggingConfiguration returns logging configuration
+// GetLoggingConfiguration function returns logging configuration
 func GetLoggingConfiguration(config *ConfigStruct) LoggingConfiguration {
 	return config.Logging
 }
@@ -243,12 +247,13 @@ func GetSentryConfiguration(config *ConfigStruct) SentryConfiguration {
 	return config.Sentry
 }
 
-// GetS3Configuration returns S3/Minio configuration
+// GetS3Configuration function returns S3/Minio configuration
 func GetS3Configuration(config *ConfigStruct) S3Configuration {
 	return config.S3
 }
 
-// updateConfigFromClowder updates the current config with the values defined in clowder
+// updateConfigFromClowder function updates the current config with the values
+// defined in clowder
 func updateConfigFromClowder(c *ConfigStruct) error {
 	if clowder.IsClowderEnabled() {
 		// can not use Zerolog at this moment!
