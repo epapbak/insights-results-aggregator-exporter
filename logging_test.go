@@ -27,7 +27,8 @@ func TestInitLoggingWrongSentryDSN(t *testing.T) {
 	config, err := main.LoadConfiguration("", "tests/config2")
 	assert.NoError(t, err, "unexpected error loading configuration")
 
-	err = main.InitLogging(&config)
+	closer, err := main.InitLogging(&config)
+	defer closer()
 	assert.Error(t, err, "expecting an error due to an invalid Sentry DSN while initializing logging")
 	assert.Contains(t, err.Error(), "DsnParseError")
 }
@@ -39,6 +40,7 @@ func TestInitLoggingWithSentryDSN(t *testing.T) {
 	config, err := main.LoadConfiguration("", "tests/config2")
 	assert.NoError(t, err, "unexpected error loading configuration")
 
-	err = main.InitLogging(&config)
+	closer, err := main.InitLogging(&config)
+	defer closer()
 	assert.NoError(t, err, "unexpected error initializing logging")
 }

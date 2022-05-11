@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
@@ -353,24 +352,18 @@ func main() {
 		log.Err(err).Msg("Load configuration")
 	}
 
-	err = InitLogging(&config)
+	loggingCloser, err := InitLogging(&config)
 	if err != nil {
 		log.Err(err).Msg("Init logging")
-	}
-
-	if config.Logging.Debug {
-		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
 	// perform selected operation
 	exitStatus, err := doSelectedOperation(&config, cliFlags)
 	if err != nil {
 		log.Err(err).Msg("Do selected operation")
-		os.Exit(exitStatus)
-		return
 	}
 
-	log.Debug().Msg("Started")
+	loggingCloser()
 
-	log.Debug().Msg("Finished")
+	os.Exit(exitStatus)
 }
