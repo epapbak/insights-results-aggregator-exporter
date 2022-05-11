@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -451,31 +452,26 @@ func (w DummyWriter) Write(p []byte) (n int, err error) {
 	return 0, nil
 }
 
-// createOperationLog function constructs operation log instance
-func createOperationLog(cliFlags CliFlags, buffer *bytes.Buffer) (zerolog.Logger, error) {
-	dummyLogger := zerolog.New(DummyWriter{}).With().Logger()
+// createOperationWriter function constructs operation writer instance
+func createOperationWriter(cliFlags CliFlags, buffer *bytes.Buffer) (io.Writer, error) {
+	dummyWriter := DummyWriter{}
 
 	if cliFlags.ExportLog {
 		switch cliFlags.Output {
 		case s3Output:
-			memoryLogger := zerolog.New(buffer).With().Logger()
-			memoryLogger.Info().Msg("Memory logger initialized")
-			return memoryLogger, nil
+			return buffer, nil
 		case fileOutput:
 			logFile, err := os.Create(logFile)
 			if err != nil {
-				return dummyLogger, err
+				return dummyWriter, err
 			}
-			fileLogger := zerolog.New(logFile).With().Logger()
-			fileLogger.Info().Msg("File logger initialized")
-			return fileLogger, nil
+			return logFile, nil
 		default:
-			return dummyLogger, fmt.Errorf(unknownOutputType, cliFlags.Output)
+			return dummyWriter, fmt.Errorf(unknownOutputType, cliFlags.Output)
 		}
 	}
 
-	return dummyLogger, nil
-
+	return dummyWriter, nil
 }
 
 func main() {
@@ -490,22 +486,21 @@ func main() {
 		log.Err(err).Msg("Load configuration")
 	}
 
-	loggingCloser, err := InitLogging(&config)
-	if err != nil {
-		log.Err(err).Msg("Init logging")
-	}
-
 	var buffer bytes.Buffer
-	operationLogger, err := createOperationLog(cliFlags, &buffer)
+	operationWriter, err := createOperationWriter(cliFlags, &buffer)
 	if err != nil {
 		log.Err(err).Msg("Create operation log")
-		loggingCloser()
 		os.Exit(ExitStatusIOError)
 		return
 	}
 
+	loggingCloser, err := InitLogging(&config, []io.Writer{operationWriter}...)
+	if err != nil {
+		log.Err(err).Msg("Init logging")
+	}
+
 	// perform selected operation
-	exitStatus, err := doSelectedOperation(&config, cliFlags, operationLogger)
+	exitStatus, err := doSelectedOperation(&config, cliFlags, log.Logger)
 	if err != nil {
 		log.Err(err).Msg("Do selected operation")
 	}

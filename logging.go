@@ -28,12 +28,14 @@ import (
 
 // InitLogging add more writers to zerolog log object. This way the logging can be sent to
 // many targets. For the moment just STDOUT and Sentry are configured.
-func InitLogging(config *ConfigStruct) (closer func(), err error) {
+func InitLogging(config *ConfigStruct, extrawriters ...io.Writer) (closer func(), err error) {
 	var (
 		writers       []io.Writer
 		writeClosers  []io.WriteCloser
 		consoleWriter io.Writer
 	)
+
+	writers = append(writers, extrawriters...)
 
 	loggingConf := GetLoggingConfiguration(config)
 	sentryConf := GetSentryConfiguration(config)
