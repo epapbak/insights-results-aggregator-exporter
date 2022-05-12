@@ -525,7 +525,7 @@ func mainWithStatusCode() int {
 	}
 
 	log.Debug().Msg("Finished")
-	return 0
+	return ExitStatusOK
 }
 
 func main() {
