@@ -15,3 +15,58 @@ limitations under the License.
 */
 
 package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+
+	zlogsentry "github.com/archdx/zerolog-sentry"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+)
+
+// InitLogging add more writers to zerolog log object. This way the logging can be sent to
+// many targets. For the moment just STDOUT and Sentry are configured.
+func InitLogging(config *ConfigStruct) error {
+	var (
+		writers       []io.Writer
+		consoleWriter io.Writer
+	)
+
+	loggingConf := GetLoggingConfiguration(config)
+	sentryConf := GetSentryConfiguration(config)
+
+	stdOut := os.Stdout
+	consoleWriter = stdOut
+
+	if loggingConf.Debug {
+		// nice colored output
+		consoleWriter = zerolog.ConsoleWriter{Out: stdOut}
+	}
+
+	writers = append(writers, consoleWriter)
+
+	if sentryConf.SentryDSN != "" {
+		sentryWriter, err := setupSentryLogging(sentryConf)
+		if err != nil {
+			err = fmt.Errorf("Error initializing Sentry logging: %s", err.Error())
+			return err
+		}
+		writers = append(writers, sentryWriter)
+	}
+
+	logsWriter := zerolog.MultiLevelWriter(writers...)
+	log.Logger = zerolog.New(logsWriter).With().Timestamp().Logger()
+
+	return nil
+}
+
+func setupSentryLogging(conf SentryConfiguration) (io.WriteCloser, error) {
+	sentryWriter, err := zlogsentry.New(conf.SentryDSN, zlogsentry.WithEnvironment(conf.SentryEnvironment))
+	if err != nil {
+		return nil, err
+	}
+
+	return sentryWriter, nil
+}

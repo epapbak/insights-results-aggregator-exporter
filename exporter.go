@@ -490,6 +490,11 @@ func main() {
 		log.Err(err).Msg("Load configuration")
 	}
 
+	err = InitLogging(&config)
+	if err != nil {
+		log.Err(err).Msg("Init logging")
+	}
+
 	if config.Logging.Debug {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
