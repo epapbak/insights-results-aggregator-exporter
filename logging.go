@@ -28,9 +28,10 @@ import (
 
 // InitLogging add more writers to zerolog log object. This way the logging can be sent to
 // many targets. For the moment just STDOUT and Sentry are configured.
-func InitLogging(config *ConfigStruct) error {
+func InitLogging(config *ConfigStruct) (func(), error) {
 	var (
 		writers       []io.Writer
+		writeClosers  []io.WriteCloser
 		consoleWriter io.Writer
 	)
 
@@ -51,15 +52,24 @@ func InitLogging(config *ConfigStruct) error {
 		sentryWriter, err := setupSentryLogging(sentryConf)
 		if err != nil {
 			err = fmt.Errorf("Error initializing Sentry logging: %s", err.Error())
-			return err
+			return func() {}, err
 		}
 		writers = append(writers, sentryWriter)
+		writeClosers = append(writeClosers, sentryWriter)
 	}
 
 	logsWriter := zerolog.MultiLevelWriter(writers...)
 	log.Logger = zerolog.New(logsWriter).With().Timestamp().Logger()
 
-	return nil
+	return func() {
+		log.Info().Msg("Closing logging writers")
+		for _, w := range writeClosers {
+			err := w.Close()
+			if err != nil {
+				log.Error().Err(err).Msg("unable to close writer")
+			}
+		}
+	}, nil
 }
 
 func setupSentryLogging(conf SentryConfiguration) (io.WriteCloser, error) {
