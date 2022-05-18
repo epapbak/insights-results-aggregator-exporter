@@ -58,6 +58,17 @@ objects:
     dependencies:
       - ccx-insights-results
 
+- apiVersion: cloud.redhat.com/v1alpha1
+  kind: ClowdJobInvocation
+  metadata:
+    labels:
+      app: ccx-data-pipeline
+    name: ccx-results-exporter
+  spec:
+    appName: ccx-data-pipeline
+    jobs:
+      - instance
+
 parameters:
 - name: CLOWDER_ENABLED
   description: Determines if this is a Clowder deployment
