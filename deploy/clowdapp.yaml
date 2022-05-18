@@ -40,7 +40,7 @@ objects:
         image: ${IMAGE}:${IMAGE_TAG}
         # TODO: Use a command to export any database
         command:
-          - ./irae
+          - ./insights-results-aggregator-exporter
           - "-show-authors"
         restartPolicy: Never
         resources:
