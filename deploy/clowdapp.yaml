@@ -55,6 +55,9 @@ objects:
 
 
 parameters:
+- name: CLOWDER_ENABLED
+  description: Determines if this is a Clowder deployment
+  value: "false"
 - name: ACTIVE_DEADLINE_SECONDS
   description: The maximum duration the job can run. 
   value: 300 # 5 minutes
