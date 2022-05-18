@@ -30,10 +30,10 @@ objects:
       iqePlugin: ccx
     jobs:
     - name: insights-results-aggregator-exporter-job
-      parallelism: 1    
-      completions: 1    
-      activeDeadlineSeconds: ${ACTIVE_DEADLINE_SECONDS} 
-      backoffLimit: ${BACKOFF_LIMIT}
+      parallelism: 1
+      completions: 1
+      activeDeadlineSeconds: ${ACTIVE_DEADLINE_SECONDS}{INTEGER}
+      backoffLimit: ${BACKOFF_LIMIT}{INTEGER}
       env:
       # TODO: Set env
       podSpec:
