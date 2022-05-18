@@ -62,6 +62,9 @@ parameters:
 - name: CLOWDER_ENABLED
   description: Determines if this is a Clowder deployment
   value: "true"
+- description: Env Name
+  name: ENV_NAME
+  required: true
 - name: ACTIVE_DEADLINE_SECONDS
   description: The maximum duration the job can run. 
   value: 300 # 5 minutes
