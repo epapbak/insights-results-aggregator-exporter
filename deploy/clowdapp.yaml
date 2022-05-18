@@ -16,20 +16,20 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: ccx-insights-results-aggregator-exporter
+  name: ccx-results-exporter
 objects:
 - apiVersion: cloud.redhat.com/v1alpha1
   kind: ClowdApp
   metadata:
-    name: ccx-insights-results-aggregator-exporter
+    name: ccx-results-exporter
     labels:
-      app: insights-results-aggregator-exporter
+      app: ccx-data-pipeline
   spec:
     envName: ${ENV_NAME}
     testing:
       iqePlugin: ccx
     jobs:
-    - name: insights-results-aggregator-exporter-job
+    - name: instance
       parallelism: 1
       completions: 1
       activeDeadlineSeconds: ${{ACTIVE_DEADLINE_SECONDS}}
@@ -54,9 +54,9 @@ objects:
         - name: ENV_NAME
           value: ${ENV_NAME}
     database:
-      name: ccx-data-pipeline
-      version: 12
-
+      sharedDbAppName: ccx-insights-results
+    dependencies:
+      - ccx-insights-results
 
 parameters:
 - name: CLOWDER_ENABLED
