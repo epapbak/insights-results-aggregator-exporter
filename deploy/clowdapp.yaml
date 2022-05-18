@@ -30,6 +30,7 @@ objects:
       iqePlugin: ccx
     jobs:
     - name: instance
+      schedule: "1 */1 * * *"
       parallelism: 1
       completions: 1
       activeDeadlineSeconds: ${{ACTIVE_DEADLINE_SECONDS}}
