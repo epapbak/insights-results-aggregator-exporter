@@ -63,9 +63,9 @@ objects:
   metadata:
     labels:
       app: ccx-data-pipeline
-    name: ccx-results-exporter
+    name: job-launcher
   spec:
-    appName: ccx-data-pipeline
+    appName: ccx-results-exporter
     jobs:
       - instance
 
