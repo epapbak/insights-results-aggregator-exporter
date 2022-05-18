@@ -42,7 +42,7 @@ objects:
         # TODO: Use a command to export any database
         command:
           - ./insights-results-aggregator-exporter
-          - "-show-authors"
+          - "-authors"
         restartPolicy: Never
         resources:
           requests:
