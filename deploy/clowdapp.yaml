@@ -22,8 +22,6 @@ objects:
   kind: ClowdApp
   metadata:
     name: ccx-results-exporter
-    labels:
-      app: ccx-data-pipeline
   spec:
     envName: ${ENV_NAME}
     testing:
@@ -62,7 +60,7 @@ objects:
   kind: ClowdJobInvocation
   metadata:
     labels:
-      app: ccx-data-pipeline
+      app: ccx-results-exporter
     name: job-launcher
   spec:
     appName: ccx-results-exporter
