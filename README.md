@@ -108,7 +108,7 @@ Every time a commit is pushed to any branch, there are some automatic checks ran
 * Travis CI: runs some linting and unit testing. The definition can be found at [.travis.yml](.travis.yml).
 * Golang CI Lint: runs a quite complete linting of the go scripts in the repo. The definition can be found at [golangci-lint.yml](.github/workflows/golangci-lint.yml). It runs on GitHub Actions.
 
-Also, when a commit is added to `master` (basically when a PR is merged) a ci.int pipeline builds the container image for this repo, which can be located at https://quay.io/repository/cloudservices/insights-results-aggregator-exporter. The configuration of this pipeline can be found at [build_deploy.sh](build_deploy.sh). It also runs some PR checks, which are configured at [pr_check.sh](pr_check.sh).
+Also, when a commit is added to `master` (basically when a PR is merged) a ci.int pipeline builds the container image for this repo, which can be located at https://quay.io/repository/cloudservices/insights-results-aggregator-exporter. The configuration of this pipeline can be found at [build_deploy.sh](build_deploy.sh). It also runs some PR checks on each commit, which are configured at [pr_check.sh](pr_check.sh).
 
 ## Makefile targets
 
