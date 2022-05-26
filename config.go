@@ -260,14 +260,11 @@ func updateConfigFromClowder(c *ConfigStruct) error {
 		fmt.Println("Clowder is enabled")
 
 		// get DB configuration from clowder
-		// TODO: add Clowder configuration as needed
-		/*
-			c.Storage.PGDBName = clowder.LoadedConfig.Database.Name
-			c.Storage.PGHost = clowder.LoadedConfig.Database.Hostname
-			c.Storage.PGPort = clowder.LoadedConfig.Database.Port
-			c.Storage.PGUsername = clowder.LoadedConfig.Database.Username
-			c.Storage.PGPassword = clowder.LoadedConfig.Database.Password
-		*/
+		c.Storage.PGDBName = clowder.LoadedConfig.Database.Name
+		c.Storage.PGHost = clowder.LoadedConfig.Database.Hostname
+		c.Storage.PGPort = clowder.LoadedConfig.Database.Port
+		c.Storage.PGUsername = clowder.LoadedConfig.Database.Username
+		c.Storage.PGPassword = clowder.LoadedConfig.Database.Password
 
 	} else {
 		fmt.Println("Clowder is disabled")
