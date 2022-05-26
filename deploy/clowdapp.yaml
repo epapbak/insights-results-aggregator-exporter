@@ -82,8 +82,7 @@ parameters:
   value: "3"
 - name: IMAGE
   description: Image ID of the job.
-  # TODO: Use cloudservices when https://issues.redhat.com/browse/CCXDEV-8122 is done
-  value: quay.io/ccxdev/insights-results-aggregator-exporter
+  value: quay.io/cloudservices/insights-results-aggregator-exporter
 - name: IMAGE_TAG
   description: The image tag.
   value: latest
