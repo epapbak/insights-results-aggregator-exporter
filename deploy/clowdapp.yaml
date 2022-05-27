@@ -76,7 +76,7 @@ objects:
               key: aws_secret_access_key
               optional: false
         - name: INSIGHTS_RESULTS_AGGREGATOR_EXPORTER__S3__USE_SSL
-          value: true
+          value: "true"
         - name: INSIGHTS_RESULTS_AGGREGATOR_EXPORTER__S3__BUCKET
           valueFrom:
             secretKeyRef:
