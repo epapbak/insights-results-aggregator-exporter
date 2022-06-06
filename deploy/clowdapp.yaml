@@ -147,4 +147,4 @@ parameters:
 - name: S3__TYPE
   value: s3
 - name: S3__ENDPOINT_PORT
-  value: "" # TODO: can I leave it empty?
+  description: S3 endpoint port. Leave it empty in case you are using AWS.
