@@ -37,7 +37,7 @@ objects:
         # TODO: Use a command to export any database
         command:
           - ./insights-results-aggregator-exporter
-          - "-check-s3-connection"
+          - "-show-configuration"
         restartPolicy: Never
         resources:
           requests:
