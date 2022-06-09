@@ -146,7 +146,7 @@ parameters:
   value: 400m
 - name: MEMORY_LIMIT
   description: Maximum amount of memory that the job will consume.
-  value: 10Gi
+  value: 8Gi
 # Exporter configuration
 - name: DEBUG
   value: "true"
