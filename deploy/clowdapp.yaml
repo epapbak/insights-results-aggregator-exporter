@@ -30,14 +30,14 @@ objects:
     - name: instance
       parallelism: 1
       completions: 1
-      activeDeadlineSeconds: ${{ACTIVE_DEADLINE_SECONDS}}
-      backoffLimit: ${{BACKOFF_LIMIT}}
+      activeDeadlineSeconds: ${ACTIVE_DEADLINE_SECONDS}
+      backoffLimit: ${BACKOFF_LIMIT}
       podSpec:
         image: ${IMAGE}:${IMAGE_TAG}
         command:
           - ./insights-results-aggregator-exporter
         args:
-          - "-output=${{OUTPUT}}"
+          - "-output=${OUTPUT}"
           - "-metadata=true"
         restartPolicy: Never
         resources:
